@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 
 async function part1() {
-	const input = await readFile('./input.txt', 'utf-8')
+	const input = await readFile('./day1/input.txt', 'utf-8')
 	const lines = input.split('\n')
 	const linesNumbers = lines.map((line) => {
 		const numbers = [...line].filter(character => character.match(/[0-9]/))
@@ -24,15 +24,14 @@ const numbersMap = {
 	nine: 9,
 }
 async function part2() {
-	const input = await readFile('./input.txt', 'utf-8')
+	const input = await readFile('./day1/input.txt', 'utf-8')
 	const lines = input.split('\n').filter(line => line.length)
 	const linesNumbers = lines.map((line) => {
 		const numbers: string[] = []
 		for (let i = 0; i < line.length; i++) {
 			if (line[i].match(/[0-9]/))numbers.push(line[i])
-			const part = [...line].slice(i, line.length)
 			for (const text of Object.keys(numbersMap)) {
-				if (part.slice(0, text.length).join('') === text) {
+				if (line.slice(i, i + text.length) === text) {
 					numbers.push(String(numbersMap[text as keyof typeof numbersMap]))
 				}
 			}
