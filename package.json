@@ -1,7 +1,7 @@
 {
 	"type": "module",
 	"scripts": {
-		"build": "npx tsx day2"
+		"build": "npx tsx day3"
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^2.1.2",
