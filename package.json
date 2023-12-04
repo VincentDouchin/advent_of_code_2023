@@ -1,12 +1,26 @@
 {
-	"type": "module",
-	"scripts": {
-		"build": "npx tsx day4"
-	},
-	"devDependencies": {
-		"@antfu/eslint-config": "^2.1.2",
-		"@types/node": "^20.10.1",
-		"eslint": "^8.54.0",
-		"typescript": "^5.3.2"
-	}
+  "name": "aoc2023",
+  "version": "1.0.0",
+  "description": "Advent of Code 2023 - solutions",
+  "type": "module",
+  "scripts": {
+    "start": "aocrunner day",
+    "build": "aocrunner build",
+    "format": "prettier -w src",
+    "update:readme": "aocrunner update:readme"
+  },
+  "keywords": [
+    "aoc"
+  ],
+  "author": "Vincent Douchin",
+  "license": "ISC",
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.3.1",
+    "@types/node": "^16.11.6",
+    "aocrunner": "^1.9.6",
+    "eslint": "^8.55.0"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  }
 }
