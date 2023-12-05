@@ -4,6 +4,12 @@ interface range {
 	destination: number
 	source: number
 	range: number
+	isInRange: (nb: number) => boolean
+}
+interface map {
+	source: string
+	destination: string
+	ranges: range[]
 }
 const parseInput = (rawInput: string) => {
 	const lines = rawInput.split('\n\n')
@@ -13,46 +19,20 @@ const parseInput = (rawInput: string) => {
 		const [source, destination] = map[0].replace(' map:', '').split('-to-')
 		const ranges = map.slice(1, map.length).map((r) => {
 			const [destination, source, range] = r.split(' ').map(Number)
-			return { destination, source, range }
+			const isInRange = (nb: number) => source <= nb && nb < source + range
+			return { destination, source, range, isInRange }
 		})
 		return { destination, source, ranges }
 	})
 	return { seeds, maps }
 }
 
-const findLocation = (maps: ReturnType<typeof parseInput>['maps'], seed: number, from: string): number => {
+const findLocation = (maps: map[], seed: number, from: string): number => {
 	const map = maps.find(({ source }) => source === from)
 	if (!map) return seed
-	const range = map.ranges.find(r => r.source <= seed && seed <= r.source + r.range)!
+	const range = map.ranges.find(r => r.source <= seed && seed < r.source + r.range)!
 	const newSeed = range ? range.destination + (seed - range.source) : seed
 	return findLocation(maps, newSeed, map.destination)
-}
-const findSeed = (maps: ReturnType<typeof parseInput>['maps'], seed: number, from: string): number => {
-	const map = maps.find(({ destination }) => destination === from)
-	if (!map) return seed
-	const range = map.ranges.find(r => r.destination <= seed && seed <= r.destination + r.range)!
-	const newSeed = range ? range.source - (seed - range.destination) : seed
-	return findLocation(maps, newSeed, map.source)
-}
-
-const isInRange = (nb: number) => (range: range) => range.source <= nb && nb <= range.source + range.range
-const findDestination = (nb: number) => (ranges: range[]) => {
-
-}
-
-const aggregateRanges = (ranges: range[], start: number, end: number) => {
-	let last = start
-  while (end !== last){
-    
-  }
-}
-
-const findRanges = (maps: ReturnType<typeof parseInput>['maps'], ranges: [[number, number]], from: string) => {
-	const map = maps.find(({ source }) => source === from)
-	if (!map) return ranges
-	const newRanges = ranges.map(([start, end]) => {
-
-	})
 }
 
 const part1 = (rawInput: string) => {
@@ -63,33 +43,23 @@ const part1 = (rawInput: string) => {
 
 const part2 = (rawInput: string) => {
 	const { seeds, maps } = parseInput(rawInput)
-	const seedRanges = seeds.reduce<Array<[number, number]>>((acc, v, i) => {
-		if (i % 2 === 0) {
-			return [...acc, [v, seeds[i + 1]]]
+	const seedRanges = []
+	for (let i = 0; i < seeds.length; i += 2) {
+		seedRanges.push([seeds[i], seeds[i] + seeds[i + 1]])
+	}
+	console.log(seedRanges)
+
+	let lowest = Number.POSITIVE_INFINITY
+	for (const [start, end] of seedRanges) {
+		for (let s = start; s < end; s++) {
+			const location = findLocation(maps, s, 'seed')
+			if (location < lowest) {
+				lowest = location
+			}
 		}
-		return acc
-	}, [])
-	// const locations = maps.find(({ destination }) => destination === 'location')!.ranges.sort((a, b) => {
-	// 	return a.source - b.source
-	// })
-	// for (const location of locations) {
-	// 	for (let i = location.source; i < location.source + location.range; i++) {
-	// 		const seed = findSeed(maps, i, 'location')
-	// 		console.log('seed', seed)
-	// 		if (seed) return i
-	// 	}
-	// }
-	// let lowest = Number.POSITIVE_INFINITY
-	// for (const [start, range] of seedRanges) {
-	// 	for (let s = start; s < start + range; s++) {
-	// 		const location = findLocation(maps, s, 'seed')
-	// 		if (location < lowest) {
-	// 			lowest = location
-	// 		}
-	// 	}
-	// 	console.log(start, lowest)
-	// }
-	// return lowest
+		console.log(start, lowest)
+	}
+	return lowest
 }
 
 run({
