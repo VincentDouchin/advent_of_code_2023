@@ -1,19 +1,20 @@
 import run from 'aocrunner'
 
+type Dir = 's' | 'n' | 'w' | 'e'
 const parseInput = (rawInput: string) => rawInput.split('\n')
-const directions: Record<'s' | 'n' | 'w' | 'e', [number, number]> = {
-	n: [0, -1],
-	s: [0, 1],
-	e: [1, 0],
-	w: [-1, 0],
+const directions: Record<Dir, { x: number, y: number }> = {
+	n: { x: 0, y: -1 },
+	s: { x: 0, y: 1 },
+	e: { x: 1, y: 0 },
+	w: { x: -1, y: 0 },
 }
-const opposites = {
+const opposites: Record<Dir, Dir> = {
 	n: 's',
 	s: 'n',
 	e: 'w',
 	w: 'e',
 }
-const map = {
+const map: Record<string, Dir[]> = {
 	'|': ['n', 's'],
 	'-': ['e', 'w'],
 	'L': ['n', 'e'],
@@ -27,18 +28,18 @@ const part1 = (rawInput: string) => {
 	const input = parseInput(rawInput)
 	const start = input.reduce((acc, v, y) => v.includes('S') ? { y, x: v.indexOf('S') } : acc, { y: 0, x: 0 })
 
-	let lastdir: 's' | 'n' | 'w' | 'e' = 's'
-	let last = null
+	let lastdir: Dir = 's'
+	let last: null | string = null
 	let steps = 0
 	let lastpos = start
 
 	while (last !== 'S') {
-		const [newX, newY] = directions[lastdir]
-		const next = input[lastpos.y + newY]?.[lastpos.x + newX]
+		const offset: { x: number, y: number } = directions[lastdir]
+		const next = input[lastpos.y + offset.x]?.[lastpos.x + offset.y]
 
-		lastdir = map[next].find(x => x !== opposites[lastdir])
+		lastdir = map[next].find(x => x !== opposites[lastdir])!
 		steps++
-		lastpos = { x: lastpos.x + newX, y: lastpos.y + newY, s: next }
+		lastpos = { x: lastpos.x + offset.x, y: lastpos.y + offset.y }
 		last = next
 	}
 	return steps / 2
@@ -48,20 +49,17 @@ const part2 = (rawInput: string) => {
 	const input = parseInput(rawInput)
 	const start = input.reduce((acc, v, y) => v.includes('S') ? { y, x: v.indexOf('S') } : acc, { y: 0, x: 0 })
 	const points = [{ ...start, s: '7' }]
-	console.log(start)
-	let lastdir = 's'
+	let lastdir: Dir = 's'
 	let last = null
-	let steps = 0
 
 	let lastpos = { ...start }
 
 	while (last !== 'S') {
-		const [newX, newY] = directions[lastdir]
-		const next = input[lastpos.y + newY]?.[lastpos.x + newX]
+		const offset: { x: number, y: number } = directions[lastdir]
+		const next = input[lastpos.y + offset.x]?.[lastpos.x + offset.y]
 
-		lastdir = map[next].find(x => x !== opposites[lastdir])
-		steps++
-		lastpos = { x: lastpos.x + newX, y: lastpos.y + newY }
+		lastdir = map[next].find(x => x !== opposites[lastdir])!
+		lastpos = { x: lastpos.x + offset.x, y: lastpos.y + offset.y }
 		last = next
 		points.push({ x: lastpos.x, y: lastpos.y, s: next })
 	}
@@ -76,7 +74,7 @@ const part2 = (rawInput: string) => {
 
 			if (right) ins = !ins
 			if (!fo && ins) tiles++
-		
+		}
 	}
 	return tiles
 }
