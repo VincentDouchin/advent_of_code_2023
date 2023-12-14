@@ -40,12 +40,6 @@ const part1 = (rawInput: string) => {
 	const t = transpose(input)
 	const s = sortMatrix(t)
 	return sumLoad2(transpose(s))
-	// const sorted = transpose(input).map((l) => {
-	// 	return l.join('').split('#').map(x => [...x].sort((a, b) => (b === 'O' ? 1 : 0) - (a === 'O' ? 1 : 0)).join('')).join('#').split('')
-	// })
-	// return sorted.reduce((acc, v) => {
-	// 	return acc + v.reduce((total, x, i) => total + (x === 'O' ? v.length - i : 0), 0)
-	// }, 0)
 }
 
 const cycle = memo((m: string[][]) => {
