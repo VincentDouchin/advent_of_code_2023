@@ -1,24 +1,8 @@
 import run from 'aocrunner'
+import { memo, reverse, transpose, transposeReversed } from '../utils/index.js'
 
 const parseInput = (rawInput: string) => rawInput.split('\n').map(l => l.split(''))
-const memo = (fn: (...a: any[]) => any) => {
-	const cache: Record<string, any> = {}
-	return (...args: any[]) => {
-		const argString = JSON.stringify(args)
 
-		const result = cache[argString] === undefined
-			? fn(...args)
-			: cache[argString]
-		cache[argString] = result
-		return result
-	}
-}
-const reverseLine = (l: string[]) => l.reverse()
-const transposeLine = (m: string[][], i: number) => m.map(row => row[i])
-const transposeLineReversed = (m: string[][], i: number) => m.map(row => row[i]).reverse()
-const transpose = (m: string[][]) => [...m[0]].map((_, colIndex) => transposeLine(m, colIndex))
-const transposeReversed = (m: string[][]) => [...m[0]].map((_, colIndex) => transposeLineReversed(m, colIndex))
-const reverse = (m: string[][]) => m.map(l => reverseLine(l))
 const _displayMatrix = <T>(m: T[][]) => {
 	console.log(m.map(x => x.join('')).join('\n'))
 	console.log('\n')
@@ -63,8 +47,6 @@ const cycle = memo((m: string[][]) => {
 
 const part2 = (rawInput: string) => {
 	const input = parseInput(rawInput)
-	// const test = [['.', 'N', '.'], ['W', '.', 'E'], ['.', 'S', '.']]
-	console.time('part2')
 	let c = input
 	const results: number[] = []
 	let startLoop = null
@@ -82,10 +64,7 @@ const part2 = (rawInput: string) => {
 		history.push(matrixStringified)
 	}
 	startLoop++
-	console.log(startLoop, cycles)
 	const loopLenght = cycles - startLoop
-	console.log(results)
-	console.log({ loopLenght, cycles, startLoop }, (1_000_000_000 - startLoop) % loopLenght)
 	return results[startLoop + (1_000_000_000 - startLoop) % loopLenght - 1]
 }
 

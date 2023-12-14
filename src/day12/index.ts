@@ -1,4 +1,5 @@
 import run from 'aocrunner'
+import { memo } from '../utils'
 
 const parseInput = (rawInput: string): [string, number[]][] => rawInput.split('\n').map(line => line.split(' ')).map(([parts, nbs]) => [parts, nbs.split(',').map(Number)])
 const parseInput2 = (rawInput: string): [string, number[]][] => rawInput.split('\n').map(line => line.split(' ')).map(([parts, nbs]) => {
@@ -9,17 +10,6 @@ const parseInput2 = (rawInput: string): [string, number[]][] => rawInput.split('
 		allNbs,
 	]
 })
-const memo = (fn: (...a: any[]) => any) => {
-	const cache: Record<string, any> = {}
-	return (...args: any[]) => {
-		const argString = JSON.stringify(args)
-		const result = cache[argString] === undefined
-			? fn(...args)
-			: cache[argString]
-		cache[argString] = result
-		return result
-	}
-}
 
 const solveLine2 = (line: string, pattern: number[]) => {
 	const walk = memo((pos: number, index: number): number => {
