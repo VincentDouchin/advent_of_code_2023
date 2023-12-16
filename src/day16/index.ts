@@ -77,7 +77,6 @@ const part2 = (rawInput: string) => {
 		const res2 = followPath(new Map(), input, i, input[0].length - 1, 'u')
 		result.push(res2.size)
 	}
-	console.log('ok')
 	for (let i = 0; i < input.length; i++) {
 		const res1 = followPath(new Map(), input, 0, i, 'r')
 		result.push(res1.size)
